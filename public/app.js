@@ -142,6 +142,7 @@ async function initFirebase() {
     }, { merge: true });
 
     await loadData();
+    await syncNotificationState();
   });
 
   await signInAnonymously(state.auth);
@@ -157,6 +158,50 @@ async function initFirebase() {
       loadData();
     });
   }
+}
+
+
+async function syncNotificationState() {
+  if (!("Notification" in window)) {
+    els.notificationState.textContent = "Unsupported";
+    els.notificationButton.disabled = true;
+    return;
+  }
+
+  if (Notification.permission === "denied") {
+    els.notificationState.textContent = "Blocked";
+    els.notificationState.className = "pill neutral";
+    els.notificationButton.textContent = "Enable in phone settings";
+    return;
+  }
+
+  if (Notification.permission !== "granted") {
+    els.notificationState.textContent = "Not enabled";
+    els.notificationState.className = "pill neutral";
+    els.notificationButton.textContent = "Enable notifications";
+    return;
+  }
+
+  els.notificationState.textContent = "Enabled";
+  els.notificationState.className = "pill good";
+  els.notificationButton.textContent = "Notifications enabled";
+
+  if (!state.uid || !state.messaging) return;
+
+  const registration = await navigator.serviceWorker.ready;
+  const token = await getToken(state.messaging, {
+    vapidKey,
+    serviceWorkerRegistration: registration
+  });
+
+  if (!token) return;
+
+  const tokenId = await sha256(token);
+  await setDoc(doc(state.db, "users", state.uid, "devices", tokenId), {
+    token,
+    createdAt: serverTimestamp(),
+    userAgent: navigator.userAgent
+  }, { merge: true });
 }
 
 async function enableNotifications() {
