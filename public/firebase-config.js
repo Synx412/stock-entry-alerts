@@ -14,4 +14,4 @@
     appId: "1:995555783650:web:3a7388b951aed601ebbfbb"
   };
 
-export const vapidKey = "REPLACE_WEB_PUSH_VAPID_PUBLIC_KEY";
+export const vapidKey = "BJ42ZkFLoJVJCmJvRPLEJQZx66pEqfHNLODRQX8Jq1cFmFpYIbV1tArQnX7DgrSsHOUjjSXTes5rBXF4VLYuX14";
