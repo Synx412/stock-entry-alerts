@@ -1,4 +1,5 @@
 import importlib.util
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -7,8 +8,12 @@ import pandas as pd
 
 MODULE_PATH = Path(__file__).with_name("scanner.py")
 SPEC = importlib.util.spec_from_file_location("scanner_module", MODULE_PATH)
+
+if SPEC is None or SPEC.loader is None:
+    raise RuntimeError("Could not load scanner.py")
+
 MODULE = importlib.util.module_from_spec(SPEC)
-assert SPEC.loader is not None
+sys.modules[SPEC.name] = MODULE
 SPEC.loader.exec_module(MODULE)
 
 
