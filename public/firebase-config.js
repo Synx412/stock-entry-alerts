@@ -2,13 +2,16 @@
 // Replace every REPLACE_* value using Firebase Console → Project settings → Your apps.
 // These values identify the Firebase project; Firestore Security Rules protect user data.
 
-export const firebaseConfig = {
-  apiKey: "REPLACE_API_KEY",
-  authDomain: "REPLACE_PROJECT_ID.firebaseapp.com",
-  projectId: "REPLACE_PROJECT_ID",
-  storageBucket: "REPLACE_PROJECT_ID.firebasestorage.app",
-  messagingSenderId: "REPLACE_MESSAGING_SENDER_ID",
-  appId: "REPLACE_APP_ID"
-};
+
+
+  // Your web app's Firebase configuration
+  export const firebaseConfig = {
+    apiKey: "AIzaSyBz9a_xuW_G_rAMFj7ZfLnxcOAlEKbfTzI",
+    authDomain: "stock-entry-alerts.firebaseapp.com",
+    projectId: "stock-entry-alerts",
+    storageBucket: "stock-entry-alerts.firebasestorage.app",
+    messagingSenderId: "995555783650",
+    appId: "1:995555783650:web:3a7388b951aed601ebbfbb"
+  };
 
 export const vapidKey = "REPLACE_WEB_PUSH_VAPID_PUBLIC_KEY";
