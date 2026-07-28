@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#07111f">
+  <meta name="description" content="Installable stock and ETF watchlist with daily entry-condition alerts.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon-192.png">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Stock Entry Alerts</title>
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <p class="eyebrow">DAILY MARKET SCANNER</p>
+      <h1>Stock Entry Alerts</h1>
+      <p class="subtitle">Indian and global stocks, indices and ETFs</p>
+    </div>
+    <button id="installButton" class="secondary hidden">Install app</button>
+  </header>
+
+  <main>
+    <section id="setupWarning" class="panel warning hidden">
+      <h2>Firebase setup required</h2>
+      <p>Open <code>firebase-config.js</code> and add your Firebase web configuration and VAPID key. The app package includes exact deployment instructions.</p>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">DEVICE</p>
+          <h2>Notifications</h2>
+        </div>
+        <span id="notificationState" class="pill neutral">Not enabled</span>
+      </div>
+      <p class="muted">Alerts are sent when your selected score or price condition is reached. Daily data can be delayed and is not tick-by-tick.</p>
+      <button id="notificationButton" class="primary">Enable notifications</button>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">WATCHLIST</p>
+          <h2>Add an asset</h2>
+        </div>
+      </div>
+
+      <div class="preset-row" id="presetRow"></div>
+
+      <form id="watchForm" class="form-grid">
+        <label>
+          Ticker
+          <input id="tickerInput" required placeholder="NIFTYBEES.NS or AAPL" autocomplete="off">
+        </label>
+
+        <label>
+          Name
+          <input id="nameInput" placeholder="Nifty 50 ETF">
+        </label>
+
+        <label>
+          Mode
+          <select id="modeInput">
+            <option value="long-term">Long-term investor</option>
+            <option value="swing">Swing trader</option>
+          </select>
+        </label>
+
+        <label>
+          Alert when score reaches
+          <input id="scoreInput" type="number" min="45" max="95" step="1" value="68">
+        </label>
+
+        <label>
+          Your maximum buy price
+          <input id="priceInput" type="number" min="0" step="0.01" value="0">
+          <small>Use 0 to disable the price alert.</small>
+        </label>
+
+        <label class="checkbox-label">
+          <input id="enabledInput" type="checkbox" checked>
+          Alerts enabled
+        </label>
+
+        <button class="primary full-width" type="submit">Save to watchlist</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">LATEST DAILY RESULTS</p>
+          <h2>Your watchlist</h2>
+        </div>
+        <button id="refreshButton" class="secondary">Refresh view</button>
+      </div>
+
+      <div id="statusMessage" class="status"></div>
+      <div id="watchlist" class="card-grid"></div>
+    </section>
+
+    <section class="panel">
+      <h2>How to read the app</h2>
+      <div class="legend-grid">
+        <div><span class="signal strong">78–100</span><p>Strong technical setup</p></div>
+        <div><span class="signal buy">68–77</span><p>Staggered-buy zone</p></div>
+        <div><span class="signal watch">58–67</span><p>Watch conditions</p></div>
+        <div><span class="signal neutral">45–57</span><p>Neutral</p></div>
+        <div><span class="signal weak">&lt;45</span><p>Weak setup</p></div>
+      </div>
+      <p class="muted">The app does not predict an exact date. When conditions are not favourable, it shows the price level, moving-average recovery or RSI condition to wait for.</p>
+    </section>
+  </main>
+
+  <template id="assetCardTemplate">
+    <article class="asset-card">
+      <div class="asset-top">
+        <div>
+          <p class="asset-name"></p>
+          <p class="asset-ticker"></p>
+        </div>
+        <span class="score-badge"></span>
+      </div>
+
+      <div class="price-row">
+        <strong class="asset-price"></strong>
+        <span class="asset-daily"></span>
+      </div>
+
+      <p class="asset-signal"></p>
+
+      <div class="metric-grid">
+        <div><span>RSI</span><strong class="metric-rsi"></strong></div>
+        <div><span>vs 50DMA</span><strong class="metric-ma50"></strong></div>
+        <div><span>52W drawdown</span><strong class="metric-dd"></strong></div>
+        <div><span>Volatility</span><strong class="metric-vol"></strong></div>
+      </div>
+
+      <div class="condition-box">
+        <p class="condition-title">When to consider buying</p>
+        <p class="condition-text"></p>
+        <p class="buy-zone"></p>
+      </div>
+
+      <p class="updated"></p>
+
+      <div class="card-actions">
+        <button class="secondary edit-button">Edit</button>
+        <button class="danger delete-button">Delete</button>
+      </div>
+    </article>
+  </template>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

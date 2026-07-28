@@ -1,0 +1,31 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow create, read, update: if request.auth != null
+        && request.auth.uid == userId;
+      allow delete: if false;
+
+      match /watchlist/{assetId} {
+        allow read, create, update, delete: if request.auth != null
+          && request.auth.uid == userId
+          && request.resource.data.keys().hasOnly([
+            "ticker", "name", "mode", "minScore", "maxBuyPrice",
+            "currency", "enabled", "updatedAt"
+          ]);
+      }
+
+      match /devices/{deviceId} {
+        allow read, create, update, delete: if request.auth != null
+          && request.auth.uid == userId;
+      }
+
+      match /analysis/{assetId} {
+        allow read: if request.auth != null
+          && request.auth.uid == userId;
+        allow write: if false;
+      }
+    }
+  }
+}
