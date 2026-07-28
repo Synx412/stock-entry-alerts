@@ -6,13 +6,14 @@ importScripts("https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js
 importScripts("https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js");
 
 const firebaseConfig = {
-  apiKey: "REPLACE_API_KEY",
-  authDomain: "REPLACE_PROJECT_ID.firebaseapp.com",
-  projectId: "REPLACE_PROJECT_ID",
-  storageBucket: "REPLACE_PROJECT_ID.firebasestorage.app",
-  messagingSenderId: "REPLACE_MESSAGING_SENDER_ID",
-  appId: "REPLACE_APP_ID"
-};
+    apiKey: "AIzaSyBz9a_xuW_G_rAMFj7ZfLnxcOAlEKbfTzI",
+    authDomain: "stock-entry-alerts.firebaseapp.com",
+    projectId: "stock-entry-alerts",
+    storageBucket: "stock-entry-alerts.firebasestorage.app",
+    messagingSenderId: "995555783650",
+    appId: "1:995555783650:web:3a7388b951aed601ebbfbb"
+  };
+
 
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
