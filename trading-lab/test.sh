@@ -3,7 +3,7 @@ set -euo pipefail
 LAB_DIR="$(cd "$(dirname "$0")" && pwd)"
 PY="$LAB_DIR/.venv/bin/python"
 WORK="$LAB_DIR/workspace"
-"$PY" -m py_compile "$LAB_DIR/openai_brain.py" "$LAB_DIR/enable_openai.py"
+"$PY" -m py_compile "$LAB_DIR/openai_brain.py" "$LAB_DIR/enable_openai.py" "$LAB_DIR/skills_ui.py"
 (
   cd "$WORK/Breaking_Money_Trading-Agent"
   "$PY" -m unittest discover -s tests -v
