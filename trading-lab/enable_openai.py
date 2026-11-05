@@ -57,7 +57,10 @@ def main() -> None:
     replace_once(gui, 'Strategy notes for Claude', 'Strategy notes for AI')
 
     cfg = ARENA / "config.toml"
-    replace_once(cfg, 'brain = "auto"', 'brain = "rules"')
+    if 'brain = "auto"' in cfg.read_text(encoding="utf-8"):
+        replace_once(cfg, 'brain = "auto"', 'brain = "rules"')
+    else:
+        print("Preserved existing trading brain setting.")
 
     print("OpenAI backend installed. Default remains rules (free, no model API calls).")
 
