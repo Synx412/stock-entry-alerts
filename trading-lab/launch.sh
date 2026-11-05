@@ -27,6 +27,10 @@ case "$1" in
     cd "$ARENA"
     exec "$PY" -m arena demo --days 1 --brain openai-api --no-open
     ;;
+  skills-ui)
+    cd "$LAB_DIR"
+    exec "$PY" "$LAB_DIR/skills_ui.py" --port 8788
+    ;;
   skills-test)
     cd "$DAY"
     exec "$PY" -m unittest discover -s tests -v
@@ -36,7 +40,7 @@ case "$1" in
     exec "$PY" trader-scanner/scan.py universe
     ;;
   *)
-    echo "Usage: bash trading-lab/launch.sh {demo|gui|gpt-demo|skills-test|skill-universe}"
+    echo "Usage: bash trading-lab/launch.sh {skills-ui|demo|gui|gpt-demo|skills-test|skill-universe}"
     exit 2
     ;;
 esac
