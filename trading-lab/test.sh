@@ -7,6 +7,7 @@ WORK="$LAB_DIR/workspace"
 (
   cd "$WORK/Breaking_Money_Trading-Agent"
   "$PY" -m unittest discover -s tests -v
+  "$PY" -m unittest discover -s "$LAB_DIR/tests" -v
   "$PY" -m arena demo --days 1 --brain rules --no-open
 )
 (
