@@ -16,7 +16,26 @@ It does **not** modify the existing stock-entry-alerts application or deploy any
 
 Codespaces is a cloud Linux machine, not a native Android app. Its availability, included quota and usage charges depend on your GitHub account. Codespaces may stop when idle; this is **not** reliable unattended live monitoring.
 
+## Use all 11 skills from your phone
+
+Once Codespaces setup has completed, run:
+
+    bash trading-lab/launch.sh skills-ui
+
+Open the **Ports** tab and tap **Open in Browser** for port **8788**. The forwarded port must remain **private** (the dashboard has no login page). You will see 11 cards with controls for chart scanning, news, entry timing, exit plans, Time Machine, budget sizing, risk checks, ticket viewing, price alerts, SEC earnings, and public congressional disclosures.
+
+- US equity tickers only (AAPL, MSFT, TSLA), prices in USD, times in US Eastern.
+- The 11-skills UI is **not an LLM**: it executes the original Python programs without Claude, and does not automatically write natural-language trading advice.
+- Research pipeline: Scan → News → Entry → Plan → Time Machine → Size → Risk → View ticket. A simulated plan or an order ticket is **not** an actual order.
+- For SEC news/financial data, supply SEC_USER_AGENT as a Codespaces secret containing your real name and contact email (for example: Jane Doe jane@example.com), then restart. Do not commit your identity into a public repository. Without it, headline-only news works, and SEC facts tell you what is missing.
+- Alerts run **only when you press Check**; they are not background push notifications.
+- Tick data is not exchange-grade, and live connections may fail or rate-limit. This is a research interface, not a real-time execution terminal.
+- The 11-skills broker integration is **deliberately not connected**; this dashboard exposes read-only ticket viewing, not approval or fills.
+
+The upstream scripts are installed in the workspace alongside Breaking Money but operate independently.
+
 ## Quick commands
+
 
 Run these commands from the repository root, one at a time:
 
