@@ -1,0 +1,9 @@
+# Downloaded third-party code and local state: never commit
+/workspace/
+/.venv/
+__pycache__/
+*.pyc
+.env
+*.db
+/reports/
+/data/
