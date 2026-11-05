@@ -11,7 +11,12 @@ WORK="$LAB_DIR/workspace"
   "$PY" -m arena demo --days 1 --brain rules --no-open
 )
 (
-  cd "$WORK/day-trader-skill"
+  # Upstream has a repository-layout test that rejects the local trader/
+  # settings folder. Test the pristine tracked tree without touching user data.
+  CLEAN="$(mktemp -d)"
+  trap 'rm -rf "$CLEAN"' EXIT
+  git -C "$WORK/day-trader-skill" archive HEAD | tar -x -C "$CLEAN"
+  cd "$CLEAN"
   "$PY" -m unittest discover -s tests -v
 )
 echo "Both offline test suites and paper-only demo completed."
