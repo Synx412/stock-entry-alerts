@@ -1,0 +1,12 @@
+{
+  "name": "Trading Labs (paper only)",
+  "image": "mcr.microsoft.com/devcontainers/python:1-3.11-bookworm",
+  "postCreateCommand": "bash trading-lab/setup.sh",
+  "forwardPorts": [8787],
+  "portsAttributes": {
+    "8787": {"label": "Breaking Money paper-trading dashboard", "onAutoForward": "notify", "visibility": "private"}
+  },
+  "customizations": {
+    "vscode": {"settings": {"terminal.integrated.defaultProfile.linux": "bash"}}
+  }
+}
