@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Day Trader Research Lab · 11 skills</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--panel:#141d30;--border:#26344d;--ink:#eef3fc;--muted:#a3b4d0;--teal:#50dcc1;--blue:#85a9fa}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+header{border-bottom:1px solid var(--border);background:linear-gradient(105deg,#162b3b,#0c1326);padding:28px 18px}
+main,header .wrap{max-width:1040px;margin:auto}main{padding:18px 14px 60px}
+h1{font-size:clamp(1.4rem,4vw,2.05rem);margin:6px 0;letter-spacing:-.03em}
+h2{font-size:1.15rem;margin:0 0 12px}h3{font-size:1.02rem;margin:0}
+p{margin:6px 0;color:var(--muted)}.tag{display:inline-block;background:#153d3b;border:1px solid #297a70;color:#95efe3;border-radius:40px;padding:2px 10px;font-size:.78rem;font-weight:650}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:14px}
+.mini{font-size:.82rem;color:var(--muted)}.mini strong{color:var(--teal)}
+.box{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:18px}
+fieldset{border:0;padding:0;margin:0}.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+label{display:block;color:var(--muted);font-size:.84rem;font-weight:650;margin:0 0 5px}
+input{width:100%;border:1px solid #394968;background:#0d1629;color:var(--ink);padding:10px 12px;border-radius:9px;font-size:16px}
+input:focus,button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.help{font-size:.8rem;margin-top:12px}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.skill{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px;min-height:185px}
+.skill h3 span{color:var(--teal);font-variant-numeric:tabular-nums;margin-right:5px}
+.skill p{font-size:.86rem;min-height:48px}.actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+button{appearance:none;border:1px solid #527cb5;border-radius:8px;background:#253d62;color:#fff;padding:10px 12px;font-size:.86rem;font-weight:650;cursor:pointer}
+button.secondary{background:transparent;border-color:var(--border);color:var(--blue)}
+button:disabled{opacity:.4;cursor:not-allowed}button:not(:disabled):active{transform:translateY(1px)}
+#result{scroll-margin-top:16px}pre{white-space:pre-wrap;word-break:break-word;background:#070c18;border:1px solid #24304b;border-radius:10px;padding:16px;max-height:460px;overflow:auto;font-size:.82rem;line-height:1.55}
+footer{color:#94a4be;font-size:.85rem;border-top:1px solid var(--border);padding-top:14px;margin-top:18px}a{color:var(--blue)}
+@media(max-width:520px){header{padding:20px 14px}.skill{min-height:unset}.skill p{min-height:0}.cards{grid-template-columns:1fr}}
+</style></head>
+<body>
+<header><div class="wrap">
+<span class="tag">Research only · no real orders</span>
+<h1>Day Trader · 11 Skills</h1>
+<p>Run the original open-source Python trading tools from your phone. No Claude subscription needed. US equities and US Eastern market hours.</p>
+<div class="toolbar"><div id="installed" class="mini">Checking installation…</div><div id="fileStatus" class="mini"></div></div>
+</div></header>
+<main>
+<section class="box">
+<h2>Research inputs</h2>
+<div class="fields">
+<div><label for="symbol">US stock ticker</label><input id="symbol" value="AAPL" maxlength="13" autocapitalize="characters" spellcheck="false"></div>
+<div><label for="symbols">Scanner tickers (1–10)</label><input id="symbols" value="AAPL,MSFT,TSLA" autocapitalize="characters" spellcheck="false"></div>
+<div><label for="entry">Proposed entry price (USD)</label><input id="entry" inputmode="decimal" type="number" step=".01" min=".01" placeholder="e.g. 190.00"></div>
+<div><label for="stop">Stop-loss price (USD)</label><input id="stop" inputmode="decimal" type="number" step=".01" min=".01" placeholder="e.g. 187.00"></div>
+<div><label for="threshold">Above-price alert (USD)</label><input id="threshold" inputmode="decimal" type="number" step=".01" min=".01" placeholder="e.g. 200.00"></div>
+</div>
+<p class="help">Set entry and stop yourself from research; the planner calculates a 2R target. These fields do not trade or authorize orders. Live quote endpoints can be delayed or rate-limited.</p>
+</section>
+<div class="cards">
+<section class="skill"><h3><span>01</span> Chart scanner</h3><p>Find daily setups, opening-range breakouts, or download the US ticker universe.</p><div class="actions"><button data-action="scan_daily">Daily scan</button><button data-action="scan_orb">Breakouts</button><button class="secondary" data-action="scan_universe">Universe</button></div></section>
+<section class="skill"><h3><span>02</span> News monitor</h3><p>Recent stock headlines and price moves; SEC filings are included only if SEC identity is configured.</p><div class="actions"><button data-action="news">Read news</button></div></section>
+<section class="skill"><h3><span>03</span> Entry timer</h3><p>Check if the ticker's opening-range breakout has triggered. Saves an entry observation.</p><div class="actions"><button data-action="entry">Check entry</button></div></section>
+<section class="skill"><h3><span>04</span> Exit planner</h3><p>Create a long-only trade plan using your entry and stop, with a 2R target.</p><div class="actions"><button data-action="exit">Save plan</button></div></section>
+<section class="skill"><h3><span>05</span> Time Machine</h3><p>Simulate 10,000 potential outcomes of a previously saved plan. Requires enough historical candles.</p><div class="actions"><button data-action="time">Simulate</button></div></section>
+<section class="skill"><h3><span>06</span> Budget manager</h3><p>Size a planned position using the project's paper budget and maximum loss settings.</p><div class="actions"><button data-action="budget">Size order</button></div></section>
+<section class="skill"><h3><span>07</span> Risk manager</h3><p>Check proposed orders against the configured risk limits, cash and timing rules.</p><div class="actions"><button data-action="risk">Check risk</button></div></section>
+<section class="skill"><h3><span>08</span> Broker ticket viewer</h3><p>Inspect proposed tickets. Order approval and broker connectivity are deliberately disabled in this dashboard.</p><div class="actions"><button data-action="broker">Show tickets</button></div></section>
+<section class="skill"><h3><span>09</span> Price alerts</h3><p>Fetch a delayed quote, add a price threshold, or check stored alerts while the dashboard is open.</p><div class="actions"><button data-action="alerts_quote">Quote</button><button data-action="alerts_add">Add alert</button><button class="secondary" data-action="alerts_list">List</button><button class="secondary" data-action="alerts_check">Check now</button></div></section>
+<section class="skill"><h3><span>10</span> Earnings analyst</h3><p>Read reported quarterly financial facts from SEC EDGAR. Requires your SEC User-Agent identity.</p><div class="actions"><button data-action="analyst">Analyze filing</button></div></section>
+<section class="skill"><h3><span>11</span> Congressional disclosures</h3><p>View publicly filed congressional stock-transaction disclosures. Reporting delays apply.</p><div class="actions"><button data-action="pelosi">View index</button></div></section>
+</div>
+<section class="box" id="result" aria-live="polite" style="margin-top:18px">
+<h2 id="resultTitle">Results</h2><p id="resultInfo">Choose a tool above to run it.</p><pre id="output">No command has been run.</pre>
+</section>
+<footer>Research software, not investment advice. No skill here can send a live broker order. There are no automatic background alerts or guaranteed real-time feeds. Keep the Codespaces forwarded port private. <a href="https://github.com/Jakeschincariol/day-trader-skill" rel="noopener noreferrer" target="_blank">Original open-source project</a></footer>
+</main>
+<script>
+(function(){
+"use strict";
+const $ = function(id){return document.getElementById(id);};
+const names = {
+  scan_daily:"Daily scanner",scan_orb:"Opening-range scanner",scan_universe:"US ticker universe",
+  news:"News monitor",entry:"Entry timer",exit:"Exit planner",time:"Time Machine",
+  budget:"Budget manager",risk:"Risk manager",broker:"Broker tickets (read only)",
+  alerts_quote:"Delayed quote",alerts_add:"Add price alert",alerts_list:"List alerts",
+  alerts_check:"Check alerts",analyst:"Earnings analyst",pelosi:"Public disclosures"
+};
+async function status(){
+ try {
+  const response = await fetch("/api/status");
+  const data = await response.json();
+  $("installed").textContent = data.installed ? "✓ Both tools and Python found" : "Setup missing: run setup.sh";
+  $("fileStatus").textContent = "Plan: "+(data.plan_ready?"saved":"not yet")+" · Proposed orders: "+(data.orders_ready?"saved":"not yet")+" · SEC identity: "+(data.sec_configured?"set":"not set");
+ }catch(err){$("installed").textContent="Status unavailable"; }
+}
+async function run(action, button) {
+ const data={action:action,symbol:$("symbol").value,symbols:$("symbols").value,entry:$("entry").value,stop:$("stop").value,threshold:$("threshold").value};
+ const title=names[action]||action;
+ $("resultTitle").textContent=title;
+ $("resultInfo").textContent="Running tool on the Codespace. Results are research output, not orders.";
+ $("output").textContent="Running…";
+ $("result").scrollIntoView({behavior:"smooth",block:"start"});
+ button.disabled=true;
+ try{
+  const response = await fetch("/api/run",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+  const result=await response.json();
+  $("resultInfo").textContent=result.error?"Input / setup problem":result.ok?"Finished":"Tool returned code "+result.exit_code+" (may mean no signal or no data)";
+  $("output").textContent=result.error||result.output||"No output.";
+ }catch(err) {
+  $("resultInfo").textContent="Connection error";
+  $("output").textContent=String(err);
+ }finally {
+  button.disabled=false;
+  await status();
+ }
+}
+document.querySelectorAll("button[data-action]").forEach(function(button){
+ button.addEventListener("click",function(){run(button.getAttribute("data-action"),button);});
+});
+status();
+})();
+</script>
+</body></html>
