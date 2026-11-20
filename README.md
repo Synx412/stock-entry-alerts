@@ -1,136 +1,62 @@
-# Stock Entry Alerts — permanent installable PWA
+# Eleven Desk
 
-This package is the permanent version of the stock-entry scanner.
+A mobile-friendly US-equity paper trading platform. A fresh account starts with $100,000 in simulated cash. Advance market time yourself, review orders before submitting them, and inspect fills and portfolio performance after each bar.
 
-It provides:
+## Start the desk
 
-- an Android-installable Progressive Web App;
-- anonymous user accounts;
-- a saved watchlist;
-- famous Indian/global ticker presets;
-- score alerts;
-- user-defined maximum-buy-price alerts;
-- latest daily score, RSI, moving averages, volatility and drawdown;
-- a technical buy-zone value;
-- a clear “wait for these conditions” explanation when the alert is not ready;
-- scheduled scans after Indian and US market hours;
-- Firebase Cloud Messaging push notifications.
+From the repository root, run the following with Python 3.
 
-## Important limitation
+    python3 -m http.server 8788 --directory dist
 
-The app does not know the exact future date when a stock should be bought.
-It reports measurable trigger conditions: score threshold, user price limit,
-moving-average recovery, pullback level and RSI range.
+Open http://localhost:8788 in a modern browser. In GitHub Codespaces, run the same command and open forwarded port 8788. The browser application has no install or build step.
 
-The calculated buy zone is a technical reference range. It is not an intrinsic
-valuation and does not include company accounts, management quality, news or
-future earnings.
+Select a ticker on **Trade desk**, enter a whole-share quantity, choose **Review paper order**, and confirm. Choose **Next bar** to see the fill, then open **Portfolio**. The history can be exported as CSV.
 
-## Architecture
+## Market data and fills
 
-- `public/`: installable PWA.
-- `scanner/scanner.py`: daily market-data scanner.
-- Cloud Firestore: watchlists and latest analyses.
-- Firebase Authentication: anonymous user identity.
-- Firebase Cloud Messaging: Android/browser notifications.
-- GitHub Pages: permanent HTTPS app hosting.
-- GitHub Actions: twice-daily scans.
+- **Synthetic replay** contains five simulated sessions for AAPL, NVDA, MSFT, AMZN, GOOGL and TSLA. Each bar spans five minutes. The opening screen includes 36 observed bars.
+- **Market data → Import** accepts historical USD OHLCV in CSV. Each row contains a bar-close timestamp with a UTC offset. The app aligns tickers on matching timestamps and rejects duplicates and inconsistent prices. A new import starts a separate, fresh account after confirmation. Use **Download CSV example** to inspect the format.
+- **Paper execution** uses the next bar’s open, 5 basis points of adverse slippage and a $1 fee per filled order. Orders are filled in submission order. Pending buys reserve estimated cash and pending sells reserve shares. An unaffordable opening gap rejects the order. The broker supports long positions and cash, with immediate simulated settlement.
+- **Portfolio** uses weighted-average cost including purchase fees, and marks positions at the visible closing price. Open positions stay open at the end of a replay.
+- The account and current replay are saved in IndexedDB on the device and browser used. Concurrent tabs serialize account changes. Clearing site data removes the local account. Alerts are checked as the replay advances.
 
-## Deployment checklist
+CSV example with prices in dollars and volume in shares:
 
-### 1. Create a Firebase project
+    timestamp,symbol,open,high,low,close,volume
+    2025-09-22T13:35:00Z,AAPL,100.00,101.00,99.00,100.50,10000
+    2025-09-22T13:40:00Z,AAPL,100.55,101.50,100.25,101.00,12000
 
-In Firebase Console:
+An import supports up to 20 tickers, 20,000 data rows and 2 MiB. Imported files are processed on the device. Multi-symbol imports require a common clock.
 
-1. Create a project.
-2. Add a **Web app**.
-3. Enable **Authentication → Sign-in method → Anonymous**.
-4. Create a **Cloud Firestore** database.
-5. Open **Cloud Messaging → Web Push certificates** and generate a key pair.
-6. Open **Project settings → Service accounts** and generate a private key.
+### Download historical IEX bars
 
-Firebase web configuration values are identifiers, but the service-account JSON
-is secret. Never put the service-account JSON in the repository.
+The optional Python 3.9+ helper reads historical US stock prices from Alpaca’s market-data API. Set APCA_API_KEY_ID and APCA_API_SECRET_KEY in your shell or Codespaces secrets. Keep downloaded data outside the source tree. The browser itself uses no credentials.
 
-### 2. Configure the frontend
+    python3 tools/download_bars.py --symbols AAPL,MSFT --start 2025-09-22 --end 2025-09-26 --out /tmp/replay.csv
 
-Edit both:
+Import the resulting CSV under **Market data**. The helper requests raw IEX bars, converts provider opening timestamps to bar-close timestamps, and keeps shared weekday bars within 09:30–16:00 Eastern. The time filter does not model early exchange closes. Data access depends on the provider account. [Alpaca historical bars](https://docs.alpaca.markets/us/reference/stockbars)
 
-- `public/firebase-config.js`
-- `public/firebase-messaging-sw.js`
+## The eleven tools
 
-Replace every `REPLACE_*` value with the web-app configuration shown by
-Firebase. Put the public Web Push VAPID key into `firebase-config.js`.
+| Tool | What it does |
+| --- | --- |
+| Chart scanner | Ranks replay tickers by performance since the visible session open. |
+| News monitor | Filters a dated archive of publisher announcements and links to the originals. |
+| Entry timer | Checks a breakout against the prior three bars, a five-bar average and session VWAP estimated from typical bar prices. |
+| Exit planner | Computes a long-position target from entry, stop and a reward-to-risk multiple. |
+| Time machine | Bootstraps 10,000 price paths from up to 252 visible intraday returns and reports ending-price percentiles. |
+| Risk manager | Shows exposure, largest position, equity weights and cash available. |
+| Budget manager | Calculates whole-share size from a risk budget, stop distance, trading costs and buying power. |
+| Paper broker | Reviews, reserves, fills and cancels simulated orders. |
+| Price alerts | Tracks one-time close-price thresholds on the replay clock. |
+| Earnings analyst | Compares historical revenue, growth and diluted EPS with links to the issuer releases. |
+| Pelosi tracker | Filters a selection of disclosed spouse transactions by ticker and links to the original House filing. |
 
-### 3. Create a GitHub repository
+News, earnings and disclosures are a curated historical archive. Dated records become visible on the following calendar day so an unknown publication time cannot reveal future information. Imported market prices and archived disclosures have independent sources.
 
-Upload all files in this folder to the repository. Keep the default branch
-named `main`.
+## Verify
 
-In **Settings → Secrets and variables → Actions**:
+    node --test tests/desk.test.mjs
+    python3 -m unittest discover -s tests -p 'test_*.py'
 
-- Add a repository secret named `FIREBASE_SERVICE_ACCOUNT_JSON`.
-  Paste the entire service-account JSON as the value.
-- Add a repository variable named `FIREBASE_PROJECT_ID`.
-  Set it to the Firebase project ID.
-
-### 4. Enable GitHub Pages
-
-Open **Settings → Pages** and select **GitHub Actions** as the source.
-
-Open the repository’s **Actions** tab and run:
-
-- `Deploy Firestore rules`
-- `Deploy installable app`
-- `Daily market scanner`
-
-The Pages workflow displays the permanent HTTPS address.
-
-### 5. Install on Android
-
-1. Open the permanent Pages address in Chrome.
-2. Tap the app’s **Install app** button or Chrome menu → **Install app**.
-3. Open the installed app.
-4. Tap **Enable notifications**.
-5. Add tickers and alert conditions.
-
-The GitHub Actions scanner then checks the watchlist after Indian and US market
-hours and sends a notification only when a condition crosses into the alert
-state.
-
-## Ticker examples
-
-| Asset | Ticker |
-|---|---|
-| Nifty 50 index | `^NSEI` |
-| Nifty 50 ETF | `NIFTYBEES.NS` |
-| Nifty Next 50 ETF | `JUNIORBEES.NS` |
-| Nifty Midcap 150 ETF | `MID150BEES.NS` |
-| Reliance | `RELIANCE.NS` |
-| TCS | `TCS.NS` |
-| HDFC Bank | `HDFCBANK.NS` |
-| Apple | `AAPL` |
-| Microsoft | `MSFT` |
-| Nvidia | `NVDA` |
-| S&P 500 ETF | `SPY` |
-| Total World ETF | `VT` |
-
-## Testing
-
-```bash
-pip install -r scanner/requirements.txt
-pip install pytest
-pytest -q scanner/test_scanner.py
-```
-
-## Data warning
-
-The default scanner uses yfinance because it covers many Indian and global
-symbols. It is convenient research data, not an exchange-grade live feed.
-Daily values can be delayed, missing or revised.
-
-## Security
-
-The included Firestore rules restrict each browser identity to its own
-watchlist, device tokens and analyses. The scanner uses the Firebase Admin SDK,
-which must run only in GitHub Actions with the service-account secret.
+The engine tests use Node.js 22+ and the provider tests use recorded response shapes. All tests run offline. The platform uses rule-based analytics and a local simulated broker.

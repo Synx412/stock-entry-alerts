@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#193b2c">
+  <meta name="description" content="A paper trading desk for US equities with market replay, a practice portfolio and eleven research tools.">
+  <title>Eleven Desk · Paper Trading</title>
+  <link rel="icon" href="./mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./desk.css">
+  <script type="module" src="./desk.mjs"></script>
+</head>
+<body>
+  <a class="skip" href="#workspace">Skip to workspace</a>
+  <header class="mast"><div class="mast-inner">
+    <a href="#desk" class="brand" aria-label="Eleven Desk, trade desk"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>Eleven Desk</a>
+    <nav aria-label="Main navigation"><a href="#desk" data-page="desk">Trade desk</a><a href="#portfolio" data-page="portfolio">Portfolio</a><a href="#tools" data-page="tools">Research tools</a></nav>
+    <button id="data-open" class="top-data">Market data</button>
+  </div></header>
+  <main id="workspace" tabindex="-1">
+    <div class="intro"><div><p class="edition"><span class="signal"></span>Paper trading <span class="slash">/</span> US equities</p><h1 id="page-title">Trade desk</h1></div>
+    <div class="clock"><div><b id="replay-time">Loading replay…</b><small id="feed-label">Market replay</small></div><button class="dark" id="next-bar" disabled>Next bar</button></div></div>
+    <section id="account-strip" class="account-strip" aria-label="Paper account summary"></section>
+    <div id="content"></div>
+    <noscript>This desk needs JavaScript to run the paper account.</noscript>
+  </main>
+  <footer><span>Eleven Desk</span><span>Paper execution <span class="slash">/</span> USD <span class="slash">/</span> New York time</span></footer>
+  <dialog id="action-dialog" aria-labelledby="modal-title"><div class="dialog-head"><h2 id="modal-title"></h2><button id="close-dialog" class="icon-btn" aria-label="Close dialog">×</button></div><div id="dialog-body"></div></dialog>
+  <div class="notice" id="notice" role="status" aria-live="polite"></div>
+</body></html>
